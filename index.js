@@ -10,6 +10,13 @@ async function run() {
 	const result = await plexAPI.sessions.getSessions()
 
 	console.log(result.object.mediaContainer.metadata)
+
+	result.object.mediaContainer.metadata.forEach(async session => {
+		// IDs stored as strings for some reason
+		if (session.user.id === '1') {
+			console.log(`MiaB is listening to: ${session.title} - ${session.parentTitle} (${session.parentYear})`)
+		}
+	})
 }
 
 run()
