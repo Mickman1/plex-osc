@@ -2,11 +2,8 @@ import 'dotenv/config'
 import chalk from 'chalk'
 
 // VRChat OSC
-import { Client, Server } from 'node-osc'
+import { Client } from 'node-osc'
 const oscClient = new Client('127.0.0.1', 9000)
-const oscServer = new Server(9001, '127.0.0.1', () => {
-	console.log(chalk.cyan(`[${new Date().toLocaleTimeString()}]`), chalk.yellow('OSC Server started at 9001'))
-})
 
 // Plex API
 import { PlexAPI } from '@lukehagar/plexjs'
