@@ -32,7 +32,7 @@ async function getPlexSessions() {
 
 			// Don't repeat title twice, for instances like Singles. Use Artist title instead
 			if (session.title === session.parentTitle)
-				line2 = session.grandparentTitle
+				subtitle = session.grandparentTitle
 
 			const chatboxMessage = `🎶 ${title} 🎶\n${subtitle} (${session.parentYear})`
 
@@ -41,7 +41,7 @@ async function getPlexSessions() {
 				return;
 			
 			oscClient.send('/chatbox/input', chatboxMessage, true)
-			console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: "${chatboxMessage}"}`)
+			console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: "${chatboxMessage.replace('\n', ' | ')}"}`)
 
 			lastOSCMessage = chatboxMessage
 			lastOSCMessageTimeMs = new Date().getTime()
