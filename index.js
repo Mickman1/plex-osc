@@ -13,10 +13,11 @@ const plexAPI = new PlexAPI({
 })
 
 let lastOSCMessage = ''
-let lastOSCMessageTimeMs
+let lastOSCMessageTimeMs = 0
 
 async function getPlexSessions() {
-	const result = await plexAPI.sessions.getSessions()
+	const sessions = await plexAPI.sessions.getSessions()
+	//console.log(sessions.object.mediaContainer)
 
 
 	result.object.mediaContainer.metadata.forEach(async session => {
