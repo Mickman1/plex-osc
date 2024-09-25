@@ -15,7 +15,10 @@ const plexAPI = new PlexAPI({
 	accessToken: process.env.PLEX_TOKEN,
 })
 
-async function run() {
+let lastOSCMessage = ''
+let lastOSCMessageTimeMs
+
+async function getPlexSessions() {
 	const result = await plexAPI.sessions.getSessions()
 
 	//console.log(result.object.mediaContainer.metadata)
@@ -26,10 +29,19 @@ async function run() {
 			//console.log(`MiaB is listening to: ${session.title} - ${session.parentTitle} (${session.parentYear})`)
 
 			const chatboxMessage = `MiaB is listening to: ${session.title} - ${session.parentTitle} (${session.parentYear})`
+			// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
+			if (lastOSCMessage === chatboxMessage && new Date().getTime() - lastOSCMessageTimeMs <= 5000)
+				return;
+			
 			oscClient.send('/chatbox/input', chatboxMessage, true)
 			console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white ⌨️: "${chatboxMessage}"}`)
+
+			lastOSCMessage = chatboxMessage
+			lastOSCMessageTimeMs = new Date().getTime()
 		}
 	})
 }
 
-run()
+setInterval(() => {
+	getPlexSessions()
+}, 500)
