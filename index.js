@@ -26,7 +26,18 @@ async function getPlexSessions() {
 	result.object.mediaContainer.metadata.forEach(async session => {
 		// IDs stored as strings for some reason
 		if (session.user.id === '1') {
-			//console.log(`MiaB is listening to: ${session.title} - ${session.parentTitle} (${session.parentYear})`)
+			let activityType = ''
+			switch(session.type) {
+				case 'episode': case 'movie':
+					activityType = 'watching'
+					break
+				case 'track':
+					activityType = 'listening to'
+					break
+				default:
+					activityType = 'experiencing'
+			}
+			const chatboxMessage = `MiaB is ${activityType}: ${session.title} - ${session.parentTitle} (${session.parentYear})`
 
 			const chatboxMessage = `MiaB is listening to: ${session.title} - ${session.parentTitle} (${session.parentYear})`
 			// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
