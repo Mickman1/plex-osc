@@ -21,31 +21,27 @@ let lastOSCMessageTimeMs
 async function getPlexSessions() {
 	const result = await plexAPI.sessions.getSessions()
 
-	//console.log(result.object.mediaContainer.metadata)
 
 	result.object.mediaContainer.metadata.forEach(async session => {
 		// IDs stored as strings for some reason
 		if (session.user.id === '1') {
-			let activityType = ''
-			switch(session.type) {
-				case 'episode': case 'movie':
-					activityType = 'watching'
-					break
-				case 'track':
-					activityType = 'listening to'
-					break
-				default:
-					activityType = 'experiencing'
-			}
-			const chatboxMessage = `MiaB is ${activityType}: ${session.title} - ${session.parentTitle} (${session.parentYear})`
+			console.log(session)
 
-			const chatboxMessage = `MiaB is listening to: ${session.title} - ${session.parentTitle} (${session.parentYear})`
+			let title = session.title
+			let subtitle = session.parentTitle
+
+			// Don't repeat title twice, for instances like Singles. Use Artist title instead
+			if (session.title === session.parentTitle)
+				line2 = session.grandparentTitle
+
+			const chatboxMessage = `🎶 ${title} 🎶\n${subtitle} (${session.parentYear})`
+
 			// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
 			if (lastOSCMessage === chatboxMessage && new Date().getTime() - lastOSCMessageTimeMs <= 5000)
 				return;
 			
 			oscClient.send('/chatbox/input', chatboxMessage, true)
-			console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white ⌨️: "${chatboxMessage}"}`)
+			console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: "${chatboxMessage}"}`)
 
 			lastOSCMessage = chatboxMessage
 			lastOSCMessageTimeMs = new Date().getTime()
