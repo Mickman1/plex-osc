@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@lukehagar/plexjs": "^0.23.5",
-    "dotenv": "^16.4.5"
+    "chalk": "^4.1.2",
+    "dotenv": "^16.4.5",
+    "node-osc": "^9.1.3"
   }
 }
