@@ -74,14 +74,17 @@ async function getPlexSessions() {
 				break
 		}
 
+		const durationTimestamp = secondsToTimestamp(session.duration / 1000)
+		const currentTimestamp = secondsToTimestamp(session.viewOffset / 1000)
+
 		const chatboxMessage = `${emoji}${title}${emoji}${newline}${subtitle} (${year})`
 
 		// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
 		if (lastOSCMessage === chatboxMessage && new Date().getTime() - lastOSCMessageTimeMs <= 5000)
 			return;
 		
-		oscClient.send('/chatbox/input', chatboxMessage, true)
-		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: "${chatboxMessage.replace('\n', ' | ')}"}`)
+		oscClient.send('/chatbox/input', `${chatboxMessage}\n${currentTimestamp} / ${durationTimestamp}`, true)
+		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: "${chatboxMessage.replace('\n', ' | ')} | ${currentTimestamp} / ${durationTimestamp}"}`)
 
 		lastOSCMessage = chatboxMessage
 		lastOSCMessageTimeMs = new Date().getTime()
@@ -92,6 +95,17 @@ async function getPlexSessions() {
 		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 🧹: Cleared}`)
 		lastOSCMessage = ''
 	}
+}
+
+function secondsToTimestamp(seconds) {
+	const h = Math.floor(seconds / 3600).toString(),
+				m = Math.floor(seconds % 3600 / 60).toString(),
+				s = Math.floor(seconds % 60).toString().padStart(2,'0')
+	
+	if (h == 0)
+		return `${m}:${s}`;
+	
+	return `${h}:${m.padStart(2,'0')}:${s}`;
 }
 
 setInterval(() => {
