@@ -44,12 +44,31 @@ async function getPlexSessions() {
 				emoji = '🍿'
 				subtitle = ''
 				newline = ''
-				year = session.year
-				//const result = await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(session.ratingKey), { retries: { retryConnectionErrors: true } })
 
+				// Horrible solution to a plexjs bug.
+				// https://github.com/LukeHagar/plexjs/issues/17
+				try {
+					const movieMetadata = await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(session.ratingKey))
+				}
+				catch (error) {
+					year = error.rawValue.object.MediaContainer.Metadata[0].year
+				}
 				break
 			case 'episode':
 				emoji = '📺'
+				title = session.grandparentTitle
+				subtitle = `Season ${session.parentIndex} Episode ${session.index}`
+				if (session.parentIndex === 0)
+					subtitle = `Special Episode ${session.index}`
+
+				// Horrible solution to a plexjs bug.
+				// https://github.com/LukeHagar/plexjs/issues/17
+				try {
+					const episodeMetadata = await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(session.ratingKey))
+				}
+				catch (error) {
+					year = error.rawValue.object.MediaContainer.Metadata[0].year
+				}
 				break
 		}
 
