@@ -32,28 +32,28 @@ async function getPlexSessions() {
 
 		switch (session.type) {
 			case 'track':
+				emoji = '🎵'
+
 				// Don't repeat title twice, for instances like Singles. Use Artist title instead
 				if (session.title === session.parentTitle)
 					subtitle = session.grandparentTitle
 
 				year = session.parentYear
-
-				emoji = '🎶'
 				break
 			case 'movie':
+				emoji = '🍿'
 				subtitle = ''
 				newline = ''
 				year = session.year
 				//const result = await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(session.ratingKey), { retries: { retryConnectionErrors: true } })
 
-				emoji = '🍿'
 				break
 			case 'episode':
 				emoji = '📺'
 				break
 		}
 
-		const chatboxMessage = `${emoji} ${title} ${emoji}${newline}${subtitle} (${year})`
+		const chatboxMessage = `${emoji}${title}${emoji}${newline}${subtitle} (${year})`
 
 		// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
 		if (lastOSCMessage === chatboxMessage && new Date().getTime() - lastOSCMessageTimeMs <= 5000)
