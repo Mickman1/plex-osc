@@ -84,7 +84,7 @@ async function getPlexSessions() {
 			return;
 		
 		oscClient.send('/chatbox/input', `${chatboxMessage}\n${currentTimestamp} / ${durationTimestamp}`, true)
-		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: "${chatboxMessage.replace('\n', ' | ')} | ${currentTimestamp} / ${durationTimestamp}"}`)
+		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: ${chatboxMessage.replace('\n', ' | ')} | ${currentTimestamp} / ${durationTimestamp}}`)
 
 		lastOSCMessage = chatboxMessage
 		lastOSCMessageTimeMs = new Date().getTime()
