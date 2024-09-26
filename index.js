@@ -16,13 +16,15 @@ let lastOSCMessage = ''
 let lastOSCMessageTimeMs = 0
 
 async function getPlexSessions() {
+	let isAdminPlaying = false
 	const sessions = await plexAPI.sessions.getSessions()
-	//console.log(sessions.object.mediaContainer)
 
 	sessions.object.mediaContainer.metadata?.forEach(async session => {
 		// Check if not Admin account, IDs stored as strings for some reason
 		if (session.user.id !== '1')
 			return;
+
+		isAdminPlaying = true
 
 		let title = session.title
 		let subtitle = session.parentTitle
@@ -84,6 +86,12 @@ async function getPlexSessions() {
 		lastOSCMessage = chatboxMessage
 		lastOSCMessageTimeMs = new Date().getTime()
 	})
+
+	if (!isAdminPlaying && lastOSCMessage !== '') {
+		oscClient.send('/chatbox/input', '', true)
+		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: Cleared}`)
+		lastOSCMessage = ''
+	}
 }
 
 setInterval(() => {
