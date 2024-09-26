@@ -27,7 +27,7 @@ async function getPlexSessions() {
 		isAdminPlaying = true
 
 		let title = session.title
-		let subtitle = session.parentTitle
+		let subtitle = `${session.grandparentTitle} | ${session.parentTitle}`
 		let newline = '\n'
 		let year = 0
 		let emoji = ''
