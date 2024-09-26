@@ -89,7 +89,7 @@ async function getPlexSessions() {
 
 	if (!isAdminPlaying && lastOSCMessage !== '') {
 		oscClient.send('/chatbox/input', '', true)
-		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: Cleared}`)
+		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 🧹: Cleared}`)
 		lastOSCMessage = ''
 	}
 }
