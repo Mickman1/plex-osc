@@ -60,16 +60,23 @@ async function getPlexSessions() {
 		const durationTimestamp = secondsToTimestamp(session.duration / 1000)
 		const currentTimestamp = secondsToTimestamp(session.viewOffset / 1000)
 
-		const chatboxMessage = `${emoji}${title}${emoji}${newline}${subtitle} (${year})`
+		let incompleteMessage = `${emoji}${title}${emoji}${newline}${subtitle}`
+		let chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
+
+		// VRChat has max Chatbox length of 144 characters. Chop off extra characters *before* year and timestamp, and add '...'
+		if (chatboxMessage.length > 144) {
+			incompleteMessage = incompleteMessage.slice(0, incompleteMessage.length - (chatboxMessage.length - 141)).concat('...')
+		}
+		chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
 
 		// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
-		if (lastOSCMessage === chatboxMessage && new Date().getTime() - lastOSCMessageTimeMs <= 5000)
+		if (lastOSCMessage === incompleteMessage && new Date().getTime() - lastOSCMessageTimeMs <= 5000)
 			return;
 		
-		oscClient.send('/chatbox/input', `${chatboxMessage}\n${currentTimestamp} / ${durationTimestamp}`, true)
-		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: ${chatboxMessage.replace('\n', ' | ')} | ${currentTimestamp} / ${durationTimestamp}}`)
+		oscClient.send('/chatbox/input', chatboxMessage, true)
+		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: ${chatboxMessage.replaceAll('\n', ' | ')}}`)
 
-		lastOSCMessage = chatboxMessage
+		lastOSCMessage = incompleteMessage
 		lastOSCMessageTimeMs = new Date().getTime()
 	})
 
