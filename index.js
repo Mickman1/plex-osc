@@ -35,11 +35,9 @@ async function getPlexSessions() {
 		switch (session.type) {
 			case 'track':
 				emoji = '🎵'
-
 				// Don't repeat title twice, for instances like Singles. Use Artist title instead
 				if (session.title === session.parentTitle)
 					subtitle = session.grandparentTitle
-
 				year = session.parentYear
 				break
 			case 'movie':
