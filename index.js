@@ -60,6 +60,7 @@ async function getPlexSessions() {
 				emoji = '📺'
 				title = session.grandparentTitle
 				subtitle = `Season ${session.parentIndex} Episode ${session.index}`
+				// Specials / Season 0
 				if (session.parentIndex === 0)
 					subtitle = `Special Episode ${session.index}`
 
@@ -90,6 +91,7 @@ async function getPlexSessions() {
 		lastOSCMessageTimeMs = new Date().getTime()
 	})
 
+	// Playback stopped / no playback
 	if (!isAdminPlaying && lastOSCMessage !== '') {
 		oscClient.send('/chatbox/input', '', true)
 		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 🧹: Cleared}`)
@@ -102,6 +104,7 @@ function secondsToTimestamp(seconds) {
 				m = Math.floor(seconds % 3600 / 60).toString(),
 				s = Math.floor(seconds % 60).toString().padStart(2,'0')
 	
+	// Show hours and pad minutes only if over an hour
 	if (h == 0)
 		return `${m}:${s}`;
 	
