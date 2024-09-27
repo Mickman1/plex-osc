@@ -46,15 +46,7 @@ async function getPlexSessions() {
 				emoji = '🍿'
 				subtitle = ''
 				newline = ''
-
-				// Horrible solution to a plexjs bug.
-				// https://github.com/LukeHagar/plexjs/issues/17
-				try {
-					const movieMetadata = await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(session.ratingKey))
-				}
-				catch (error) {
-					year = error.rawValue.object.MediaContainer.Metadata[0].year
-				}
+				year = await getMediaYear(session.ratingKey)
 				break
 			case 'episode':
 				emoji = '📺'
@@ -63,15 +55,7 @@ async function getPlexSessions() {
 				// Specials / Season 0
 				if (session.parentIndex === 0)
 					subtitle = `Special Episode ${session.index}`
-
-				// Horrible solution to a plexjs bug.
-				// https://github.com/LukeHagar/plexjs/issues/17
-				try {
-					const episodeMetadata = await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(session.ratingKey))
-				}
-				catch (error) {
-					year = error.rawValue.object.MediaContainer.Metadata[0].year
-				}
+				year = await getMediaYear(session.ratingKey)
 				break
 		}
 
@@ -96,6 +80,17 @@ async function getPlexSessions() {
 		oscClient.send('/chatbox/input', '', true)
 		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 🧹: Cleared}`)
 		lastOSCMessage = ''
+	}
+}
+
+async function getMediaYear(ratingKey) {
+	// Horrible solution to a plexjs bug.
+	// https://github.com/LukeHagar/plexjs/issues/17
+	try {
+		await plexAPI.library.getMetaDataByRatingKey(Number.parseInt(ratingKey))
+	}
+	catch (error) {
+		return error.rawValue.object.MediaContainer.Metadata[0].year;
 	}
 }
 
