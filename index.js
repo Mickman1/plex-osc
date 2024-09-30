@@ -78,7 +78,7 @@ async function getPlexSessions() {
 			lastViewOffsetMs = session.viewOffset
 			viewOffsetMs = session.viewOffset
 		}
-		
+
 		viewOffsetMs += pollingRateMs
 
 		if (session.player.state === 'paused') {
