@@ -100,8 +100,8 @@ async function getPlexSessions() {
 		}
 		chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
 
-		// Avoid VRChat spam by negating sending the same message twice in less than 5 seconds
-		if (lastOSCMessage === incompleteMessage && new Date().getTime() - lastOSCMessageTimeMs < 5000)
+		// Avoid VRChat spam by negating sending the same message twice in less than 3 seconds
+		if (lastOSCMessage === incompleteMessage && new Date().getTime() - lastOSCMessageTimeMs < 3000)
 			return;
 		
 		oscClient.send('/chatbox/input', chatboxMessage, true)
