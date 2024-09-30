@@ -37,7 +37,7 @@ async function getPlexSessions() {
 	const sessions = await plexAPI.sessions.getSessions()
 
 	sessions.object.mediaContainer.metadata?.forEach(async session => {
-		// Check if not Admin account, IDs stored as strings for some reason
+		// Check if not Admin account, IDs stored as strings for some reason.
 		if (session.user.id !== '1')
 			return;
 
@@ -52,7 +52,7 @@ async function getPlexSessions() {
 		switch (session.type) {
 			case 'track':
 				emoji = '🎵'
-				// Don't repeat title twice, for instances like Singles. Use Artist title instead
+				// Don't repeat title twice, for instances like Singles. Use Artist title instead.
 				if (session.title === session.parentTitle)
 					subtitle = session.grandparentTitle
 				year = session.parentYear
@@ -74,11 +74,13 @@ async function getPlexSessions() {
 				break
 		}
 
+		// Plex API viewOffset only gets updated about every 10-15 seconds depending on the client.
+		// When it updates with a different viewOffset from last time, set local viewOffset and start the 'clock'.
+		// Add polling rate each cycle to keep in time. If viewOffsetMs and session.viewOffset are the same, trust local. If not, trust server.
 		if (lastViewOffsetMs !== session.viewOffset) {
 			lastViewOffsetMs = session.viewOffset
 			viewOffsetMs = session.viewOffset
 		}
-
 		viewOffsetMs += pollingRateMs
 
 		if (session.player.state === 'paused') {
@@ -100,7 +102,7 @@ async function getPlexSessions() {
 		}
 		chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
 
-		// Avoid VRChat spam by negating sending the same message twice in less than 3 seconds
+		// Avoid VRChat spam by not sending the same message twice in less than 3 seconds.
 		if (lastOSCMessage === incompleteMessage && new Date().getTime() - lastOSCMessageTimeMs < 3000)
 			return;
 		
@@ -135,7 +137,7 @@ function secondsToTimestamp(seconds) {
 				m = Math.floor(seconds % 3600 / 60).toString(),
 				s = Math.floor(seconds % 60).toString().padStart(2,'0')
 	
-	// Show hours and pad minutes only if over an hour
+	// Show hours and pad minutes only if over an hour.
 	if (h == 0)
 		return `${m}:${s}`;
 	
