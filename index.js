@@ -71,6 +71,9 @@ async function getPlexSessions() {
 				break
 		}
 
+		if (session.player.state === 'paused')
+			emoji = '⏸️'
+
 		const durationTimestamp = secondsToTimestamp(session.duration / 1000)
 		const currentTimestamp = secondsToTimestamp(session.viewOffset / 1000)
 
