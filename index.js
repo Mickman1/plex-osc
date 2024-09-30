@@ -29,6 +29,8 @@ const plexAPI = new PlexAPI({
 const pollingRateMs = 500
 let lastOSCMessage = ''
 let lastOSCMessageTimeMs = 0
+let lastViewOffsetMs = 0
+let viewOffsetMs = 0
 
 async function getPlexSessions() {
 	let isAdminPlaying = false
@@ -72,11 +74,22 @@ async function getPlexSessions() {
 				break
 		}
 
-		if (session.player.state === 'paused')
+		if (lastViewOffsetMs !== session.viewOffset) {
+			lastViewOffsetMs = session.viewOffset
+			viewOffsetMs = session.viewOffset
+		}
+		
+		viewOffsetMs += pollingRateMs
+
+		if (session.player.state === 'paused') {
 			emoji = '⏸️'
 
+			lastViewOffsetMs = session.viewOffset
+			viewOffsetMs = session.viewOffset
+		}
+
 		const durationTimestamp = secondsToTimestamp(session.duration / 1000)
-		const currentTimestamp = secondsToTimestamp(session.viewOffset / 1000)
+		const currentTimestamp = secondsToTimestamp(viewOffsetMs / 1000)
 
 		let incompleteMessage = `${emoji}${title}${emoji}${newline}${subtitle}`
 		let chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
