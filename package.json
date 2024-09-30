@@ -13,6 +13,7 @@
   "dependencies": {
     "@lukehagar/plexjs": "^0.23.5",
     "chalk": "^4.1.2",
+    "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "node-osc": "^9.1.3"
   }

@@ -1,6 +1,20 @@
 import 'dotenv/config'
 import chalk from 'chalk'
 
+// Commander
+import { Command } from 'commander'
+const program = new Command()
+
+program
+	.name('node index')
+	.description('Show Plex "Now Playing" session in VRChat chatbox over OSC')
+	.option('-t, --token <X-Plex-Token>', 'Set Plex server token')
+	.option('-a, --address <Plex server IP / address & port>', 'Set Plex server address, including protocol and port (Example: http://127.0.0.1:32400)')
+	.helpOption('-h, --help', 'Show help information')
+	.parse()
+
+const options = program.opts()
+
 // VRChat OSC
 import { Client } from 'node-osc'
 const oscClient = new Client('127.0.0.1', 9000)
@@ -8,8 +22,8 @@ const oscClient = new Client('127.0.0.1', 9000)
 // Plex API
 import { PlexAPI } from '@lukehagar/plexjs'
 const plexAPI = new PlexAPI({
-	serverURL: process.env.PLEX_SERVER_ADDRESS,
-	accessToken: process.env.PLEX_TOKEN,
+	serverURL: options.address || process.env.PLEX_SERVER_ADDRESS,
+	accessToken: options.token || process.env.PLEX_TOKEN,
 })
 
 let lastOSCMessage = ''
