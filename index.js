@@ -26,6 +26,7 @@ const plexAPI = new PlexAPI({
 	accessToken: options.token || process.env.PLEX_TOKEN,
 })
 
+const pollingRateMs = 500
 let lastOSCMessage = ''
 let lastOSCMessageTimeMs = 0
 
@@ -130,4 +131,4 @@ function secondsToTimestamp(seconds) {
 
 setInterval(() => {
 	getPlexSessions()
-}, 500)
+}, pollingRateMs)
