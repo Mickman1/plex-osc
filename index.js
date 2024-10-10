@@ -106,7 +106,7 @@ async function getPlexSessions() {
 		if (lastOSCMessage === incompleteMessage && new Date().getTime() - lastOSCMessageTimeMs < 3000)
 			return;
 		
-		oscClient.send('/chatbox/input', chatboxMessage, true)
+		oscClient.send('/chatbox/input', chatboxMessage, true, false)
 		console.log(chalk`{cyan [${new Date().toLocaleTimeString()}]} {white 💬: ${chatboxMessage.replaceAll('\n', ' | ')}}`)
 
 		lastOSCMessage = incompleteMessage
