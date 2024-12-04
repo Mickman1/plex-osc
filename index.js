@@ -10,6 +10,7 @@ program
 	.description('Show Plex "Now Playing" session in VRChat chatbox over OSC')
 	.option('-t, --token <X-Plex-Token>', 'Set Plex server token')
 	.option('-a, --address <Plex server IP / address & port>', 'Set Plex server address, including protocol and port (Example: http://127.0.0.1:32400)')
+	.option('-p, --polling-rate <Polling rate in milliseconds>', 'Set polling rate for contacting Plex API in milliseconds (Default: 500ms)')
 	.helpOption('-h, --help', 'Show help information')
 	.parse()
 
@@ -26,7 +27,7 @@ const plexAPI = new PlexAPI({
 	accessToken: options.token || process.env.PLEX_TOKEN,
 })
 
-const pollingRateMs = 500
+const pollingRateMs = parseInt(options.pollingRate) || 500
 let lastOSCMessage = ''
 let lastOSCMessageTimeMs = 0
 let lastViewOffsetMs = 0
