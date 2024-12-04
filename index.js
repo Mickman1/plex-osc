@@ -10,6 +10,7 @@ program
 	.description('Show Plex "Now Playing" session in VRChat chatbox over OSC')
 	.option('-t, --token <X-Plex-Token>', 'Set Plex server token')
 	.option('-a, --address <Plex server IP / address & port>', 'Set Plex server address, including protocol and port (Example: http://127.0.0.1:32400)')
+	.option('-s, --short', 'Enable "short" mode. Disables subtitle from appearing for tracks.')
 	.option('-p, --polling-rate <Polling rate in milliseconds>', 'Set polling rate for contacting Plex API in milliseconds (Default: 500ms)')
 	.helpOption('-h, --help', 'Show help information')
 	.parse()
@@ -56,6 +57,8 @@ async function getPlexSessions() {
 				// Don't repeat title twice, for instances like Singles. Use Artist title instead.
 				if (session.title === session.parentTitle)
 					subtitle = session.grandparentTitle
+				if (options.short)
+						subtitle = ''
 				year = session.parentYear
 				break
 			case 'movie':
@@ -96,6 +99,8 @@ async function getPlexSessions() {
 
 		let incompleteMessage = `${emoji}${title}${emoji}${newline}${subtitle}`
 		let chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
+		if (options.short && session.type === 'track')
+			chatboxMessage = `${incompleteMessage}${currentTimestamp} / ${durationTimestamp}`
 
 		// VRChat has max Chatbox length of 144 characters. Chop off extra characters *before* year and timestamp, and add '...'
 		if (chatboxMessage.length > 144) {
