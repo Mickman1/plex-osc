@@ -113,7 +113,8 @@ async function getPlexSessions() {
 			chatboxMessage = `${incompleteMessage}${currentTimestamp} ${timestampSeparator} ${durationTimestamp}`
 
 		// VRChat has max Chatbox length of 144 characters. Chop off extra characters *before* year and timestamp, and add '...'
-		if (chatboxMessage.length > 144) {
+		const chatboxCharacterLimit = 144
+		if (chatboxMessage.length > chatboxCharacterLimit) {
 			incompleteMessage = incompleteMessage.slice(0, incompleteMessage.length - (chatboxMessage.length - 141)).concat('...')
 			chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
 		}
