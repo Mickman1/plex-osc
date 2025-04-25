@@ -59,7 +59,7 @@ async function getPlexSessions() {
 				if (session.title === session.parentTitle)
 					subtitle = session.grandparentTitle
 				if (options.short)
-						subtitle = ''
+					subtitle = ''
 				year = session.parentYear
 				break
 			case 'movie':
