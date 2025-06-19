@@ -60,7 +60,7 @@ async function getPlexSessions() {
 					subtitle = session.grandparentTitle
 				if (options.short)
 					subtitle = ''
-				year = session.parentYear
+				year = ''
 				break
 			case 'movie':
 				emoji = '🍿'
@@ -107,8 +107,12 @@ async function getPlexSessions() {
 			timestampSeparator = ''
 		}
 
+		let formattedYear = ` (${year})`
+		if (year === '')
+			formattedYear = ''
+
 		let incompleteMessage = `${emoji}${title}${emoji}${newline}${subtitle}`
-		let chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} ${timestampSeparator} ${durationTimestamp}`
+		let chatboxMessage = `${incompleteMessage}${formattedYear}\n${currentTimestamp} ${timestampSeparator} ${durationTimestamp}`
 		if (options.short && session.type === 'track')
 			chatboxMessage = `${incompleteMessage}${currentTimestamp} ${timestampSeparator} ${durationTimestamp}`
 
@@ -116,7 +120,7 @@ async function getPlexSessions() {
 		const chatboxCharacterLimit = 144
 		if (chatboxMessage.length > chatboxCharacterLimit) {
 			incompleteMessage = incompleteMessage.slice(0, incompleteMessage.length - (chatboxMessage.length - 141)).concat('...')
-			chatboxMessage = `${incompleteMessage} (${year})\n${currentTimestamp} / ${durationTimestamp}`
+			chatboxMessage = `${incompleteMessage}${formattedYear}\n${currentTimestamp} / ${durationTimestamp}`
 		}
 
 		// Avoid VRChat spam by not sending the same message twice in less than 3 seconds.
