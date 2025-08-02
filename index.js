@@ -48,6 +48,8 @@ async function getPlexSessions() {
 
 		let title = session.title
 		let subtitle = `${session.grandparentTitle} | ${session.parentTitle}`
+		if (options.short)
+			subtitle = `${session.grandparentTitle} `
 		let newline = '\n'
 		let year = 0
 		let emoji = ''
@@ -57,9 +59,7 @@ async function getPlexSessions() {
 				emoji = '🎵'
 				// Don't repeat title twice, for instances like Singles. Use Artist title instead.
 				if (session.title === session.parentTitle)
-					subtitle = session.grandparentTitle
-				if (options.short)
-					subtitle = ''
+					subtitle = `${session.grandparentTitle} `
 				year = ''
 				break
 			case 'movie':
